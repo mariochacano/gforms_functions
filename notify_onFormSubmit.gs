@@ -1,3 +1,12 @@
+function calc_workdays(date_start, date_end){
+    var workdays = 0;
+  for (var d = new Date(date_fechaInicio); d <= date_fechaTermino; d.setDate(d.getDate() + 1)) {var day = d.getDay();
+    if (day != 0 && day != 6) { // 0 = Sunday, 6 = Saturday
+      workdays++;
+    }
+  }
+}
+
 function notify_onFormSubmit(e) {
   // obtener datos
   var responses = e.values;
