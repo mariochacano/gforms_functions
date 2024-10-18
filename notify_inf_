@@ -1,0 +1,55 @@
+function notify_inf(e) {
+  // obtener datos
+  // obtener datos
+  var responses = e.values;
+
+  // info del estudiante
+  var idEstudiante = responses[1];
+
+  var sheetName = '1 sol_pra';
+  var sheetRange = "A:AI";
+
+  var nombresEstudiante = generic_functions.search_in_sheet(idEstudiante,3,master_data_ID,sheetName,sheetRange) + " " + generic_functions.search_in_sheet(idEstudiante,4,master_data_ID,sheetName,sheetRange) + " " + generic_functions.search_in_sheet(idEstudiante,5,master_data_ID,sheetName,sheetRange);
+  var rutEstudiante = generic_functions.search_in_sheet(idEstudiante,6,master_data_ID,sheetName,sheetRange)
+  var correoInstitucionalEstudiante = generic_functions.search_in_sheet(idEstudiante,7,master_data_ID,sheetName,sheetRange)
+
+  // obtener informe
+  var informefinal_drive = responses[2];
+  var file_ID;
+  var file;
+  if (informefinal_drive){
+    file_ID = informefinal_drive.match(/[-\w]{25,}/)[0];
+    file = DriveApp.getFileById(file_ID);
+    }
+
+  // estructura del email
+  // asunto
+  var str_subject = "Informe Final Proceso de práctica";
+
+  // cuerpo
+  var str_info = "<p>Estimad@ " + str_to_name + ",</p>" +
+               "<p>Se ha ingresado el informe final del proceso de práctica:</p>" +
+               "<h3>Información del estudiante</h3><ul>" +
+               "<li><strong>Nombre del Estudiante:</strong> " + nombresEstudiante + "</li>" +
+               "<li><strong>RUT del Estudiante:</strong> " + rutEstudiante + "</li>" +
+               "<li><strong>Correo Institucional del Estudiante:</strong> " + correoInstitucionalEstudiante + "</li>" +
+               "<li><strong>Enlace Informe Final:</strong> <a href='" + informefinal_drive + "'>Ver Informe</a></li>" +
+               "</ul>";
+    var str_body = str_info + generic_functions.str_html_signature;
+
+  // enviar email
+  if (file){
+    MailApp.sendEmail({
+      to: str_to_e,
+      subject: str_subject,
+      htmlBody: str_body,
+      attachments: [file.getAs(MimeType.PDF)]
+    });
+    } else {
+      MailApp.sendEmail({
+        to: str_to_e,
+        subject: str_subject,
+        htmlBody: str_body
+      });
+    }
+}
